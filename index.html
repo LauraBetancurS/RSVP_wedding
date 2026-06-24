@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP — Maria Alejandra & Juan David</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #fafaf8;
+      color: #1a1a18;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 2rem 1rem 2.5rem;
+      border-bottom: 0.5px solid #d8d6ce;
+      margin-bottom: 2rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #888780;
+      font-weight: 400;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-script {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.1;
+      color: #1a1a18;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1a1a18;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-details {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #888780;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    /* INFO CARDS */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.875rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-card {
+      background: #fff;
+      border: 0.5px solid #d8d6ce;
+      border-radius: 12px;
+      padding: 1.125rem;
+    }
+
+    .info-card-label {
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #888780;
+      font-weight: 400;
+      margin-bottom: 0.4rem;
+    }
+
+    .info-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #1a1a18;
+      margin-bottom: 0.35rem;
+      line-height: 1.3;
+    }
+
+    .info-card-address {
+      font-size: 10.5px;
+      color: #888780;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* DIVIDER */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0 0 1.5rem;
+      color: #888780;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 0.5px;
+      background: #d8d6ce;
+    }
+
+    /* GUEST CARD */
+    .guest-card {
+      background: #fff;
+      border: 0.5px solid #d8d6ce;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .guest-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 0.5px solid #ebe9e2;
+    }
+
+    .guest-card-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888780;
+      font-weight: 400;
+    }
+
+    .guest-card-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      color: #1a1a18;
+    }
+
+    .remove-btn {
+      background: none;
+      border: 0.5px solid #d8d6ce;
+      border-radius: 8px;
+      color: #888780;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 5px 11px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .remove-btn:hover {
+      border-color: #b0aea6;
+      color: #1a1a18;
+    }
+
+    /* FIELDS */
+    .field-group {
+      margin-bottom: 1.1rem;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #888780;
+      font-weight: 400;
+      margin-bottom: 7px;
+    }
+
+    .field-input {
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      background: #fafaf8;
+      border: 0.5px solid #d8d6ce;
+      border-radius: 8px;
+      padding: 13px 14px;
+      color: #1a1a18;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .field-input:focus {
+      border-color: #888780;
+    }
+
+    .field-input.error {
+      border-color: #c0392b;
+    }
+
+    /* RADIO PILLS */
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .radio-option { display: none; }
+
+    .radio-label {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: #888780;
+      border: 0.5px solid #d8d6ce;
+      border-radius: 100px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 400;
+      transition: all 0.15s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .radio-option:checked + .radio-label {
+      border-color: #1a1a18;
+      color: #1a1a18;
+      background: #f0ede6;
+      font-weight: 500;
+    }
+
+    /* OTRA FIELD */
+    .otra-field {
+      display: none;
+      margin-top: 0.875rem;
+    }
+
+    /* ADD BUTTON */
+    .add-btn {
+      width: 100%;
+      background: none;
+      border: 0.5px dashed #b0aea6;
+      border-radius: 12px;
+      color: #888780;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 16px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      transition: all 0.15s;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .add-btn:hover, .add-btn:focus {
+      border-color: #1a1a18;
+      color: #1a1a18;
+      outline: none;
+    }
+
+    /* SUBMIT */
+    .submit-btn {
+      width: 100%;
+      background: #1a1a18;
+      border: none;
+      border-radius: 12px;
+      color: #fafaf8;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      padding: 18px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      transition: opacity 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .submit-btn:hover { opacity: 0.82; }
+    .submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ERROR */
+    .error-msg {
+      display: none;
+      text-align: center;
+      font-size: 11px;
+      color: #c0392b;
+      margin-top: 0.875rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* SUCCESS */
+    .success-section {
+      display: none;
+      text-align: center;
+      padding: 3.5rem 2rem;
+      background: #fff;
+      border: 0.5px solid #d8d6ce;
+      border-radius: 12px;
+    }
+
+    .success-ornament {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-style: italic;
+      font-weight: 300;
+      color: #1a1a18;
+      margin-bottom: 0.25rem;
+    }
+
+    .success-title {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #888780;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    .success-body {
+      font-size: 12px;
+      color: #888780;
+      line-height: 1.9;
+      font-weight: 300;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 520px) {
+      .page { padding: 2rem 1rem 4rem; }
+
+      .hero { padding: 1.5rem 0.5rem 2rem; }
+      .hero-script { font-size: 38px; }
+      .hero-names { font-size: 17px; letter-spacing: 0.12em; }
+      .hero-details { font-size: 9.5px; letter-spacing: 0.16em; }
+
+      .info-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+
+      .guest-card { padding: 1.25rem 1rem; }
+
+      .radio-label { font-size: 12px; padding: 9px 14px; }
+
+      .field-input { font-size: 16px; /* prevents iOS zoom */ }
+
+      .submit-btn { padding: 18px; font-size: 10px; }
+
+      .success-ornament { font-size: 40px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="hero-eyebrow">Confirmación de asistencia</p>
+    <div class="hero-script">The Wedding of</div>
+    <div class="hero-names">Maria Alejandra &amp; Juan David</div>
+    <div class="hero-details">
+      8 de agosto, 2026<br>
+      Medellín · Antioquia · Colombia
+    </div>
+  </header>
+
+  <!-- VENUE INFO -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-label">Ceremonia</div>
+      <div class="info-card-title">Parroquia La Purísima Concepción</div>
+      <div class="info-card-address">
+        Loma el Chocho, Cl. 36 Sur #23–15<br>
+        Loma la Esmeralda, Envigado<br>
+        Antioquia, Colombia
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">Recepción</div>
+      <div class="info-card-title">Casa Cartagena — Wink Eventos</div>
+      <div class="info-card-address">
+        Calle 38 Transversal 24A<br>
+        Rionegro, Antioquia<br>
+        054040, Colombia
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div id="form-section">
+    <div class="section-divider">Confirma tu asistencia</div>
+
+    <!-- PRIMER INVITADO — estático, siempre visible -->
+    <div class="guest-card" id="guest-1">
+      <div class="guest-card-header">
+        <span class="guest-card-label">Invitado <span class="guest-card-num">1</span></span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="name-1">Nombre completo</label>
+        <input class="field-input" type="text" id="name-1" placeholder="Ej. Ana García" autocomplete="name">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Restricción alimenticia</label>
+        <div class="radio-group">
+          <input type="radio" class="radio-option" name="diet-1" id="diet-1-ninguna"     value="ninguna"     checked>
+          <label class="radio-label" for="diet-1-ninguna">Ninguna</label>
+          <input type="radio" class="radio-option" name="diet-1" id="diet-1-vegetariano" value="vegetariano">
+          <label class="radio-label" for="diet-1-vegetariano">Vegetariano</label>
+          <input type="radio" class="radio-option" name="diet-1" id="diet-1-vegano"      value="vegano">
+          <label class="radio-label" for="diet-1-vegano">Vegano</label>
+          <input type="radio" class="radio-option" name="diet-1" id="diet-1-sin-gluten"  value="sin-gluten">
+          <label class="radio-label" for="diet-1-sin-gluten">Sin gluten</label>
+          <input type="radio" class="radio-option" name="diet-1" id="diet-1-sin-lactosa" value="sin-lactosa">
+          <label class="radio-label" for="diet-1-sin-lactosa">Sin lactosa</label>
+          <input type="radio" class="radio-option" name="diet-1" id="diet-1-otra"        value="otra">
+          <label class="radio-label" for="diet-1-otra">Otra</label>
+        </div>
+      </div>
+
+      <div class="otra-field" id="otra-field-1">
+        <label class="field-label" for="otra-text-1">¿Cuál restricción?</label>
+        <input class="field-input" type="text" id="otra-text-1" placeholder="Describe tu restricción">
+      </div>
+    </div>
+    <!-- FIN PRIMER INVITADO -->
+
+    <!-- Invitados adicionales se insertan aquí -->
+    <div id="guests-container"></div>
+
+    <button class="add-btn" onclick="addGuest()">
+      + Agregar otro invitado
+    </button>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitRSVP()">
+      Confirmar asistencia
+    </button>
+
+    <p class="error-msg" id="error-msg">Hubo un error al enviar. Por favor intenta de nuevo.</p>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-section" id="success-section">
+    <div class="success-ornament">¡Gracias!</div>
+    <div class="success-title">Asistencia confirmada</div>
+    <div class="success-body">
+      Tu confirmación ha sido registrada.<br>
+      ¡Los esperamos el 8 de agosto!
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ── CONFIG ── */
+  const SUPABASE_URL      = 'https://wtmycrojbkvpoqedvhws.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_bQuQwMSzwElIbfbizFY7Pg_lcN5AUTu';
+  const EMAILJS_PUBLIC_KEY  = 'z0BPo0f_8xGlcnH6a';
+  const EMAILJS_SERVICE_ID  = 'service_a545qiv';
+  const EMAILJS_TEMPLATE_ID = 'template_nxr47pv';
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  /* ── STATE ── */
+  let guestCount = 1; // el primer card ya está en el HTML
+
+  const dietOptions = [
+    { value: 'ninguna',     label: 'Ninguna' },
+    { value: 'vegetariano', label: 'Vegetariano' },
+    { value: 'vegano',      label: 'Vegano' },
+    { value: 'sin-gluten',  label: 'Sin gluten' },
+    { value: 'sin-lactosa', label: 'Sin lactosa' },
+    { value: 'otra',        label: 'Otra' },
+  ];
+
+  /* Listener "Otra" para el primer card estático */
+  document.getElementById('diet-1-otra').addEventListener('change', () => {
+    document.getElementById('otra-field-1').style.display = 'block';
+  });
+  ['ninguna','vegetariano','vegano','sin-gluten','sin-lactosa'].forEach(val => {
+    const el = document.getElementById(`diet-1-${val}`);
+    if (el) el.addEventListener('change', () => {
+      document.getElementById('otra-field-1').style.display = 'none';
+    });
+  });
+
+  /* ── ADD GUEST ── */
+  function addGuest() {
+    guestCount++;
+    const n = guestCount;
+    const container = document.getElementById('guests-container');
+    const div = document.createElement('div');
+    div.className = 'guest-card';
+    div.id = `guest-${n}`;
+
+    const radios = dietOptions.map(opt => `
+      <input type="radio" class="radio-option" name="diet-${n}" id="diet-${n}-${opt.value}" value="${opt.value}">
+      <label class="radio-label" for="diet-${n}-${opt.value}">${opt.label}</label>
+    `).join('');
+
+    div.innerHTML = `
+      <div class="guest-card-header">
+        <span class="guest-card-label">Invitado <span class="guest-card-num">${n}</span></span>
+        <button class="remove-btn" onclick="removeGuest(${n})">✕ Eliminar</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="name-${n}">Nombre completo</label>
+        <input class="field-input" type="text" id="name-${n}" placeholder="Ej. Carlos Pérez" autocomplete="off">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Restricción alimenticia</label>
+        <div class="radio-group">${radios}</div>
+      </div>
+      <div class="otra-field" id="otra-field-${n}">
+        <label class="field-label" for="otra-text-${n}">¿Cuál restricción?</label>
+        <input class="field-input" type="text" id="otra-text-${n}" placeholder="Describe tu restricción">
+      </div>
+    `;
+
+    container.appendChild(div);
+
+    /* Default ninguna + listeners */
+    document.getElementById(`diet-${n}-ninguna`).checked = true;
+    dietOptions.forEach(opt => {
+      const el = document.getElementById(`diet-${n}-${opt.value}`);
+      if (el) el.addEventListener('change', () => {
+        document.getElementById(`otra-field-${n}`).style.display = opt.value === 'otra' ? 'block' : 'none';
+      });
+    });
+
+    document.getElementById(`name-${n}`).focus();
+    div.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function removeGuest(n) {
+    const el = document.getElementById(`guest-${n}`);
+    if (el) el.remove();
+  }
+
+  /* ── COLLECT ── */
+  function collectGuests() {
+    const allCards = [
+      document.getElementById('guest-1'),
+      ...document.querySelectorAll('#guests-container .guest-card')
+    ];
+    const guests = [];
+    let valid = true;
+
+    allCards.forEach(card => {
+      if (!card) return;
+      const id = card.id.replace('guest-', '');
+      const nameEl = document.getElementById(`name-${id}`);
+      const name = nameEl ? nameEl.value.trim() : '';
+
+      if (!name) {
+        if (nameEl) nameEl.classList.add('error');
+        valid = false;
+        return;
+      } else {
+        if (nameEl) nameEl.classList.remove('error');
+      }
+
+      const checked = card.querySelector(`input[name="diet-${id}"]:checked`);
+      let diet = checked ? checked.value : 'ninguna';
+      let dietOther = null;
+      if (diet === 'otra') {
+        const otraEl = document.getElementById(`otra-text-${id}`);
+        dietOther = otraEl ? otraEl.value.trim() : '';
+      }
+
+      guests.push({ full_name: name, dietary_restriction: diet, dietary_other: dietOther });
+    });
+
+    return { guests, valid };
+  }
+
+  /* ── FORMAT EMAIL ── */
+  function formatGuestsList(guests) {
+    return guests.map((g, i) => {
+      let diet = g.dietary_restriction;
+      if (diet === 'otra' && g.dietary_other) diet = `Otra: ${g.dietary_other}`;
+      return `${i + 1}. ${g.full_name}\n   Restricción: ${diet}`;
+    }).join('\n\n');
+  }
+
+  /* ── SUBMIT ── */
+  async function submitRSVP() {
+    const { guests, valid } = collectGuests();
+    if (!valid) return;
+    if (guests.length === 0) { alert('Agrega al menos un invitado.'); return; }
+
+    const btn = document.getElementById('submit-btn');
+    const errorMsg = document.getElementById('error-msg');
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+    errorMsg.style.display = 'none';
+
+    try {
+      /* 1 — Supabase: rsvp_responses */
+      const { data: resp, error: respErr } = await supabase
+        .from('rsvp_responses')
+        .insert({ total_guests: guests.length })
+        .select().single();
+      if (respErr) throw respErr;
+
+      /* 2 — Supabase: guests */
+      const rows = guests.map(g => ({
+        response_id: resp.id,
+        full_name: g.full_name,
+        dietary_restriction: g.dietary_restriction,
+        dietary_other: g.dietary_other || null,
+      }));
+      const { error: guestsErr } = await supabase.from('guests').insert(rows);
+      if (guestsErr) throw guestsErr;
+
+      /* 3 — EmailJS */
+      const sentAt = new Date().toLocaleDateString('es-CO', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        total_guests: guests.length,
+        guests_list: formatGuestsList(guests),
+        sent_at: sentAt,
+      });
+
+      /* 4 — Success */
+      document.getElementById('form-section').style.display = 'none';
+      document.getElementById('success-section').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+      console.error('RSVP error:', err);
+      btn.disabled = false;
+      btn.textContent = 'Confirmar asistencia';
+      errorMsg.style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>
