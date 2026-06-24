@@ -7,8 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -25,7 +23,6 @@
       padding: 3rem 1.5rem 5rem;
     }
 
-    /* HERO */
     .hero {
       text-align: center;
       padding: 2rem 1rem 2.5rem;
@@ -71,7 +68,6 @@
       line-height: 2;
     }
 
-    /* INFO CARDS */
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -111,7 +107,6 @@
       font-weight: 300;
     }
 
-    /* DIVIDER */
     .section-divider {
       display: flex;
       align-items: center;
@@ -132,7 +127,6 @@
       background: #d8d6ce;
     }
 
-    /* GUEST CARD */
     .guest-card {
       background: #fff;
       border: 0.5px solid #d8d6ce;
@@ -177,15 +171,9 @@
       transition: all 0.15s;
     }
 
-    .remove-btn:hover {
-      border-color: #b0aea6;
-      color: #1a1a18;
-    }
+    .remove-btn:hover { border-color: #b0aea6; color: #1a1a18; }
 
-    /* FIELDS */
-    .field-group {
-      margin-bottom: 1.1rem;
-    }
+    .field-group { margin-bottom: 1.1rem; }
 
     .field-label {
       display: block;
@@ -212,15 +200,9 @@
       -webkit-appearance: none;
     }
 
-    .field-input:focus {
-      border-color: #888780;
-    }
+    .field-input:focus { border-color: #888780; }
+    .field-input.error { border-color: #c0392b; }
 
-    .field-input.error {
-      border-color: #c0392b;
-    }
-
-    /* RADIO PILLS */
     .radio-group {
       display: flex;
       flex-wrap: wrap;
@@ -252,13 +234,11 @@
       font-weight: 500;
     }
 
-    /* OTRA FIELD */
     .otra-field {
       display: none;
       margin-top: 0.875rem;
     }
 
-    /* ADD BUTTON */
     .add-btn {
       width: 100%;
       background: none;
@@ -281,13 +261,8 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .add-btn:hover, .add-btn:focus {
-      border-color: #1a1a18;
-      color: #1a1a18;
-      outline: none;
-    }
+    .add-btn:hover { border-color: #1a1a18; color: #1a1a18; }
 
-    /* SUBMIT */
     .submit-btn {
       width: 100%;
       background: #1a1a18;
@@ -308,7 +283,6 @@
     .submit-btn:hover { opacity: 0.82; }
     .submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    /* ERROR */
     .error-msg {
       display: none;
       text-align: center;
@@ -318,7 +292,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* SUCCESS */
     .success-section {
       display: none;
       text-align: center;
@@ -353,25 +326,16 @@
       font-weight: 300;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 520px) {
       .page { padding: 2rem 1rem 4rem; }
-
       .hero { padding: 1.5rem 0.5rem 2rem; }
       .hero-script { font-size: 38px; }
       .hero-names { font-size: 17px; letter-spacing: 0.12em; }
       .hero-details { font-size: 9.5px; letter-spacing: 0.16em; }
-
       .info-grid { grid-template-columns: 1fr; gap: 0.75rem; }
-
       .guest-card { padding: 1.25rem 1rem; }
-
       .radio-label { font-size: 12px; padding: 9px 14px; }
-
-      .field-input { font-size: 16px; /* prevents iOS zoom */ }
-
-      .submit-btn { padding: 18px; font-size: 10px; }
-
+      .field-input { font-size: 16px; }
       .success-ornament { font-size: 40px; }
     }
   </style>
@@ -379,7 +343,6 @@
 <body>
 <div class="page">
 
-  <!-- HERO -->
   <header class="hero">
     <p class="hero-eyebrow">Confirmación de asistencia</p>
     <div class="hero-script">The Wedding of</div>
@@ -390,7 +353,6 @@
     </div>
   </header>
 
-  <!-- VENUE INFO -->
   <div class="info-grid">
     <div class="info-card">
       <div class="info-card-label">Ceremonia</div>
@@ -412,61 +374,14 @@
     </div>
   </div>
 
-  <!-- FORM -->
   <div id="form-section">
     <div class="section-divider">Confirma tu asistencia</div>
-
-    <!-- PRIMER INVITADO — estático, siempre visible -->
-    <div class="guest-card" id="guest-1">
-      <div class="guest-card-header">
-        <span class="guest-card-label">Invitado <span class="guest-card-num">1</span></span>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="name-1">Nombre completo</label>
-        <input class="field-input" type="text" id="name-1" placeholder="Ej. Ana García" autocomplete="name">
-      </div>
-
-      <div class="field-group">
-        <label class="field-label">Restricción alimenticia</label>
-        <div class="radio-group">
-          <input type="radio" class="radio-option" name="diet-1" id="diet-1-ninguna"     value="ninguna"     checked>
-          <label class="radio-label" for="diet-1-ninguna">Ninguna</label>
-          <input type="radio" class="radio-option" name="diet-1" id="diet-1-vegetariano" value="vegetariano">
-          <label class="radio-label" for="diet-1-vegetariano">Vegetariano</label>
-          <input type="radio" class="radio-option" name="diet-1" id="diet-1-vegano"      value="vegano">
-          <label class="radio-label" for="diet-1-vegano">Vegano</label>
-          <input type="radio" class="radio-option" name="diet-1" id="diet-1-sin-gluten"  value="sin-gluten">
-          <label class="radio-label" for="diet-1-sin-gluten">Sin gluten</label>
-          <input type="radio" class="radio-option" name="diet-1" id="diet-1-sin-lactosa" value="sin-lactosa">
-          <label class="radio-label" for="diet-1-sin-lactosa">Sin lactosa</label>
-          <input type="radio" class="radio-option" name="diet-1" id="diet-1-otra"        value="otra">
-          <label class="radio-label" for="diet-1-otra">Otra</label>
-        </div>
-      </div>
-
-      <div class="otra-field" id="otra-field-1">
-        <label class="field-label" for="otra-text-1">¿Cuál restricción?</label>
-        <input class="field-input" type="text" id="otra-text-1" placeholder="Describe tu restricción">
-      </div>
-    </div>
-    <!-- FIN PRIMER INVITADO -->
-
-    <!-- Invitados adicionales se insertan aquí -->
     <div id="guests-container"></div>
-
-    <button class="add-btn" onclick="addGuest()">
-      + Agregar otro invitado
-    </button>
-
-    <button class="submit-btn" id="submit-btn" onclick="submitRSVP()">
-      Confirmar asistencia
-    </button>
-
+    <button class="add-btn" id="add-btn">+ Agregar otro invitado</button>
+    <button class="submit-btn" id="submit-btn">Confirmar asistencia</button>
     <p class="error-msg" id="error-msg">Hubo un error al enviar. Por favor intenta de nuevo.</p>
   </div>
 
-  <!-- SUCCESS -->
   <div class="success-section" id="success-section">
     <div class="success-ornament">¡Gracias!</div>
     <div class="success-title">Asistencia confirmada</div>
@@ -478,21 +393,25 @@
 
 </div>
 
+<!-- libs cargadas al final para no bloquear render -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+(function () {
   /* ── CONFIG ── */
-  const SUPABASE_URL      = 'https://wtmycrojbkvpoqedvhws.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_bQuQwMSzwElIbfbizFY7Pg_lcN5AUTu';
-  const EMAILJS_PUBLIC_KEY  = 'z0BPo0f_8xGlcnH6a';
-  const EMAILJS_SERVICE_ID  = 'service_a545qiv';
-  const EMAILJS_TEMPLATE_ID = 'template_nxr47pv';
+  var SB_URL  = 'https://wtmycrojbkvpoqedvhws.supabase.co';
+  var SB_KEY  = 'sb_publishable_bQuQwMSzwElIbfbizFY7Pg_lcN5AUTu';
+  var EJ_PUB  = 'z0BPo0f_8xGlcnH6a';
+  var EJ_SVC  = 'service_a545qiv';
+  var EJ_TPL  = 'template_nxr47pv';
 
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  emailjs.init(EMAILJS_PUBLIC_KEY);
+  var db = window.supabase.createClient(SB_URL, SB_KEY);
+  emailjs.init(EJ_PUB);
 
   /* ── STATE ── */
-  let guestCount = 1; // el primer card ya está en el HTML
+  var count = 0;
 
-  const dietOptions = [
+  var DIETS = [
     { value: 'ninguna',     label: 'Ninguna' },
     { value: 'vegetariano', label: 'Vegetariano' },
     { value: 'vegano',      label: 'Vegano' },
@@ -501,169 +420,197 @@
     { value: 'otra',        label: 'Otra' },
   ];
 
-  /* Listener "Otra" para el primer card estático */
-  document.getElementById('diet-1-otra').addEventListener('change', () => {
-    document.getElementById('otra-field-1').style.display = 'block';
-  });
-  ['ninguna','vegetariano','vegano','sin-gluten','sin-lactosa'].forEach(val => {
-    const el = document.getElementById(`diet-1-${val}`);
-    if (el) el.addEventListener('change', () => {
-      document.getElementById('otra-field-1').style.display = 'none';
+  /* ── BUILD CARD ── */
+  function buildCard(n, removable) {
+    var card = document.createElement('div');
+    card.className = 'guest-card';
+    card.id = 'guest-' + n;
+
+    var radios = DIETS.map(function(opt) {
+      return '<input type="radio" class="radio-option" name="diet-' + n + '" id="diet-' + n + '-' + opt.value + '" value="' + opt.value + '">' +
+             '<label class="radio-label" for="diet-' + n + '-' + opt.value + '">' + opt.label + '</label>';
+    }).join('');
+
+    var removeBtn = removable
+      ? '<button class="remove-btn" data-n="' + n + '">✕ Eliminar</button>'
+      : '';
+
+    card.innerHTML =
+      '<div class="guest-card-header">' +
+        '<span class="guest-card-label">Invitado <span class="guest-card-num">' + n + '</span></span>' +
+        removeBtn +
+      '</div>' +
+      '<div class="field-group">' +
+        '<label class="field-label" for="name-' + n + '">Nombre completo</label>' +
+        '<input class="field-input" type="text" id="name-' + n + '" placeholder="Ej. Ana García" autocomplete="off">' +
+      '</div>' +
+      '<div class="field-group">' +
+        '<label class="field-label">Restricción alimenticia</label>' +
+        '<div class="radio-group">' + radios + '</div>' +
+      '</div>' +
+      '<div class="otra-field" id="otra-field-' + n + '">' +
+        '<label class="field-label" for="otra-text-' + n + '">¿Cuál restricción?</label>' +
+        '<input class="field-input" type="text" id="otra-text-' + n + '" placeholder="Describe tu restricción">' +
+      '</div>';
+
+    /* remove button listener */
+    var rb = card.querySelector('.remove-btn');
+    if (rb) {
+      rb.addEventListener('click', function() {
+        var el = document.getElementById('guest-' + this.getAttribute('data-n'));
+        if (el) el.remove();
+      });
+    }
+
+    /* diet listeners */
+    DIETS.forEach(function(opt) {
+      var el = document.getElementById('diet-' + n + '-' + opt.value);
+      if (!el) {
+        /* element not in DOM yet — attach after append */
+        card.addEventListener('change', function(e) {
+          if (e.target.name === 'diet-' + n) {
+            var otraField = document.getElementById('otra-field-' + n);
+            if (otraField) otraField.style.display = e.target.value === 'otra' ? 'block' : 'none';
+          }
+        });
+      }
     });
-  });
+
+    return card;
+  }
 
   /* ── ADD GUEST ── */
   function addGuest() {
-    guestCount++;
-    const n = guestCount;
-    const container = document.getElementById('guests-container');
-    const div = document.createElement('div');
-    div.className = 'guest-card';
-    div.id = `guest-${n}`;
+    count++;
+    var container = document.getElementById('guests-container');
+    var card = buildCard(count, count > 1);
+    container.appendChild(card);
 
-    const radios = dietOptions.map(opt => `
-      <input type="radio" class="radio-option" name="diet-${n}" id="diet-${n}-${opt.value}" value="${opt.value}">
-      <label class="radio-label" for="diet-${n}-${opt.value}">${opt.label}</label>
-    `).join('');
+    /* default radio */
+    var def = document.getElementById('diet-' + count + '-ninguna');
+    if (def) def.checked = true;
 
-    div.innerHTML = `
-      <div class="guest-card-header">
-        <span class="guest-card-label">Invitado <span class="guest-card-num">${n}</span></span>
-        <button class="remove-btn" onclick="removeGuest(${n})">✕ Eliminar</button>
-      </div>
-      <div class="field-group">
-        <label class="field-label" for="name-${n}">Nombre completo</label>
-        <input class="field-input" type="text" id="name-${n}" placeholder="Ej. Carlos Pérez" autocomplete="off">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Restricción alimenticia</label>
-        <div class="radio-group">${radios}</div>
-      </div>
-      <div class="otra-field" id="otra-field-${n}">
-        <label class="field-label" for="otra-text-${n}">¿Cuál restricción?</label>
-        <input class="field-input" type="text" id="otra-text-${n}" placeholder="Describe tu restricción">
-      </div>
-    `;
-
-    container.appendChild(div);
-
-    /* Default ninguna + listeners */
-    document.getElementById(`diet-${n}-ninguna`).checked = true;
-    dietOptions.forEach(opt => {
-      const el = document.getElementById(`diet-${n}-${opt.value}`);
-      if (el) el.addEventListener('change', () => {
-        document.getElementById(`otra-field-${n}`).style.display = opt.value === 'otra' ? 'block' : 'none';
-      });
+    /* diet change listener (delegated on card) */
+    card.addEventListener('change', function(e) {
+      if (e.target.name === 'diet-' + count) {
+        var otraField = document.getElementById('otra-field-' + count);
+        if (otraField) otraField.style.display = e.target.value === 'otra' ? 'block' : 'none';
+      }
     });
 
-    document.getElementById(`name-${n}`).focus();
-    div.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function removeGuest(n) {
-    const el = document.getElementById(`guest-${n}`);
-    if (el) el.remove();
+    if (count > 1) {
+      var nameEl = document.getElementById('name-' + count);
+      if (nameEl) nameEl.focus();
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   /* ── COLLECT ── */
   function collectGuests() {
-    const allCards = [
-      document.getElementById('guest-1'),
-      ...document.querySelectorAll('#guests-container .guest-card')
-    ];
-    const guests = [];
-    let valid = true;
+    var cards = document.querySelectorAll('#guests-container .guest-card');
+    var guests = [];
+    var valid = true;
 
-    allCards.forEach(card => {
-      if (!card) return;
-      const id = card.id.replace('guest-', '');
-      const nameEl = document.getElementById(`name-${id}`);
-      const name = nameEl ? nameEl.value.trim() : '';
+    cards.forEach(function(card) {
+      var id = card.id.replace('guest-', '');
+      var nameEl = document.getElementById('name-' + id);
+      var name = nameEl ? nameEl.value.trim() : '';
 
       if (!name) {
         if (nameEl) nameEl.classList.add('error');
         valid = false;
         return;
-      } else {
-        if (nameEl) nameEl.classList.remove('error');
       }
+      if (nameEl) nameEl.classList.remove('error');
 
-      const checked = card.querySelector(`input[name="diet-${id}"]:checked`);
-      let diet = checked ? checked.value : 'ninguna';
-      let dietOther = null;
+      var checked = card.querySelector('input[name="diet-' + id + '"]:checked');
+      var diet = checked ? checked.value : 'ninguna';
+      var dietOther = null;
       if (diet === 'otra') {
-        const otraEl = document.getElementById(`otra-text-${id}`);
+        var otraEl = document.getElementById('otra-text-' + id);
         dietOther = otraEl ? otraEl.value.trim() : '';
       }
 
       guests.push({ full_name: name, dietary_restriction: diet, dietary_other: dietOther });
     });
 
-    return { guests, valid };
+    return { guests: guests, valid: valid };
   }
 
   /* ── FORMAT EMAIL ── */
-  function formatGuestsList(guests) {
-    return guests.map((g, i) => {
-      let diet = g.dietary_restriction;
-      if (diet === 'otra' && g.dietary_other) diet = `Otra: ${g.dietary_other}`;
-      return `${i + 1}. ${g.full_name}\n   Restricción: ${diet}`;
+  function formatList(guests) {
+    return guests.map(function(g, i) {
+      var diet = g.dietary_restriction;
+      if (diet === 'otra' && g.dietary_other) diet = 'Otra: ' + g.dietary_other;
+      return (i + 1) + '. ' + g.full_name + '\n   Restricción: ' + diet;
     }).join('\n\n');
   }
 
   /* ── SUBMIT ── */
-  async function submitRSVP() {
-    const { guests, valid } = collectGuests();
-    if (!valid) return;
-    if (guests.length === 0) { alert('Agrega al menos un invitado.'); return; }
+  function submitRSVP() {
+    var result = collectGuests();
+    if (!result.valid) return;
+    if (result.guests.length === 0) { alert('Agrega al menos un invitado.'); return; }
 
-    const btn = document.getElementById('submit-btn');
-    const errorMsg = document.getElementById('error-msg');
+    var btn = document.getElementById('submit-btn');
+    var errEl = document.getElementById('error-msg');
     btn.disabled = true;
     btn.textContent = 'Enviando…';
-    errorMsg.style.display = 'none';
+    errEl.style.display = 'none';
 
-    try {
-      /* 1 — Supabase: rsvp_responses */
-      const { data: resp, error: respErr } = await supabase
-        .from('rsvp_responses')
-        .insert({ total_guests: guests.length })
-        .select().single();
-      if (respErr) throw respErr;
+    db.from('rsvp_responses')
+      .insert({ total_guests: result.guests.length })
+      .select()
+      .single()
+      .then(function(res) {
+        if (res.error) throw res.error;
 
-      /* 2 — Supabase: guests */
-      const rows = guests.map(g => ({
-        response_id: resp.id,
-        full_name: g.full_name,
-        dietary_restriction: g.dietary_restriction,
-        dietary_other: g.dietary_other || null,
-      }));
-      const { error: guestsErr } = await supabase.from('guests').insert(rows);
-      if (guestsErr) throw guestsErr;
+        var rows = result.guests.map(function(g) {
+          return {
+            response_id: res.data.id,
+            full_name: g.full_name,
+            dietary_restriction: g.dietary_restriction,
+            dietary_other: g.dietary_other || null,
+          };
+        });
 
-      /* 3 — EmailJS */
-      const sentAt = new Date().toLocaleDateString('es-CO', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-        hour: '2-digit', minute: '2-digit',
+        return db.from('guests').insert(rows).then(function(r2) {
+          if (r2.error) throw r2.error;
+
+          var sentAt = new Date().toLocaleDateString('es-CO', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit',
+          });
+
+          return emailjs.send(EJ_SVC, EJ_TPL, {
+            total_guests: result.guests.length,
+            guests_list: formatList(result.guests),
+            sent_at: sentAt,
+          });
+        });
+      })
+      .then(function() {
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('success-section').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function(err) {
+        console.error('RSVP error:', err);
+        btn.disabled = false;
+        btn.textContent = 'Confirmar asistencia';
+        errEl.style.display = 'block';
       });
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        total_guests: guests.length,
-        guests_list: formatGuestsList(guests),
-        sent_at: sentAt,
-      });
-
-      /* 4 — Success */
-      document.getElementById('form-section').style.display = 'none';
-      document.getElementById('success-section').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    } catch (err) {
-      console.error('RSVP error:', err);
-      btn.disabled = false;
-      btn.textContent = 'Confirmar asistencia';
-      errorMsg.style.display = 'block';
-    }
   }
+
+  /* ── INIT ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    addGuest(); /* primer invitado */
+
+    document.getElementById('add-btn').addEventListener('click', addGuest);
+    document.getElementById('submit-btn').addEventListener('click', submitRSVP);
+  });
+
+})();
 </script>
 </body>
 </html>
